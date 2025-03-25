@@ -7,7 +7,7 @@
     <link rel="stylesheet" href="css/styles.css">
 </head>
 <body>
-    <!-- Add this right after the body tag -->
+
     <div id="loadingScreen">
         <div class="loader"></div>
         <p>Loading Character...</p>
@@ -111,13 +111,13 @@
         window.GLTFExporter = GLTFExporter;
 
         window.addEventListener('load', async () => {
-            // Initialize character
+       
             window.characterModel = new CharacterModel();
             
-            // Initialize customization
+        
             new CustomizationManager(window.characterModel);
             
-            // Export button listener remains unchanged
+ 
             document.getElementById('exportBtn').addEventListener('click', () => {
                 const exporter = new GLTFExporter();
                 exporter.parse(window.characterModel.scene, (gltf) => {
