@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>3D Character Creator</title>
+    <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+    <!-- Add this right after the body tag -->
+    <div id="loadingScreen">
+        <div class="loader"></div>
+        <p>Loading Character...</p>
+    </div>
+    <div class="container">
+        <div class="viewport">
+            <canvas id="characterCanvas"></canvas>
+        </div>
+        <div class="controls">
+            <div class="control-section">
+                <h3>Customization</h3>
+                <div class="control-group">
+                    <label>Skin Color</label>
+                    <input type="color" id="skinColor" value="#ffd7c4">
+                </div>
+                <div class="control-group">
+                    <label>Hair Style</label>
+                    <select id="hairStyle">
+                        <option value="short">Short</option>
+                        <option value="long">Long</option>
+                        <option value="ponytail">Ponytail</option>
+                    </select>
+                </div>
+                <div class="control-group">
+                    <label>Hair Color</label>
+                    <input type="color" id="hairColor" value="#4a3000">
+                </div>
+                <div class="control-group">
+                    <label>Eye Color</label>
+                    <input type="color" id="eyeColor" value="#3f6fb8">
+                </div>
+                <div class="control-section">
+                    <h3>Clothing</h3>
+                    <div class="control-group">
+                        <label>Shirt Style</label>
+                        <select id="shirtStyle">
+                            <option value="tshirt">T-Shirt</option>
+                            <option value="sweater">Sweater</option>
+                            <option value="jacket">Jacket</option>
+                            <option value="tank">Tank Top</option>
+                        </select>
+                    </div>
+                    <div class="control-group">
+                        <label>Pants Style</label>
+                        <select id="pantsStyle">
+                            <option value="jeans">Jeans</option>
+                            <option value="shorts">Shorts</option>
+                            <option value="skirt">Skirt</option>
+                            <option value="formal">Formal Pants</option>
+                        </select>
+                    </div>
+                    <div class="control-group">
+                        <label>Shirt Color</label>
+                        <input type="color" id="shirtColor" value="#2196f3">
+                    </div>
+                    <div class="control-group">
+                        <label>Pants Color</label>
+                        <input type="color" id="pantsColor" value="#424242">
+                    </div>
+                </div>
+                
+                <div class="control-section">
+                    <h3>Expression</h3>
+                    <div class="control-group">
+                        <label>Face Expression</label>
+                        <select id="expression">
+                            <option value="neutral">Neutral</option>
+                            <option value="smile">Smile</option>
+                            <option value="sad">Sad</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+            <div class="action-buttons">
+                <button id="exportBtn">Export Model</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Script imports -->
+    <script async src="https://unpkg.com/es-module-shims/dist/es-module-shims.js"></script>
+    <script type="importmap">
+    {
+        "imports": {
+            "three": "https://unpkg.com/three@0.159.0/build/three.module.js",
+            "three/addons/": "https://unpkg.com/three@0.159.0/examples/jsm/"
+        }
+    }
+    </script>
+
+    <!-- Application scripts -->
+    <script type="module">
+        import * as THREE from 'three';
+        import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
+        import { GLTFExporter } from 'three/addons/exporters/GLTFExporter.js';
+        import { CustomizationManager } from './js/main.js';
+        import { CharacterModel } from './js/CharacterModel.js';
+
+        window.THREE = THREE;
+        window.OrbitControls = OrbitControls;
+        window.GLTFExporter = GLTFExporter;
+
+        window.addEventListener('load', async () => {
+            // Initialize character
+            window.characterModel = new CharacterModel();
+            
+            // Initialize customization
+            new CustomizationManager(window.characterModel);
+            
+            // Export button listener remains unchanged
+            document.getElementById('exportBtn').addEventListener('click', () => {
+                const exporter = new GLTFExporter();
+                exporter.parse(window.characterModel.scene, (gltf) => {
+                    const output = JSON.stringify(gltf);
+                    const blob = new Blob([output], { type: 'application/json' });
+                    const url = URL.createObjectURL(blob);
+                    const link = document.createElement('a');
+                    link.href = url;
+                    link.download = 'character.gltf';
+                    document.body.appendChild(link);
+                    link.click();
+                    document.body.removeChild(link);
+                    URL.revokeObjectURL(url);
+                });
+            });
+        });
+    </script>
+</body>
+</html>
