@@ -4,7 +4,7 @@ A web-based 3D character customization tool that allows users to create and cust
 
 ## Live Demo
 
-Try it out: [3D Character Creator](https://imertt.github.io/3d-character/)
+Try it out: [3D Character Creator](https://extraordinary-starlight-2a1bf0.netlify.app/)
 
 ## Features
 
